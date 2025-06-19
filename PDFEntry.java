@@ -1,10 +1,12 @@
 public abstract class PDFEntry {
-    private String autor;
-    private String titulo;
+    protected String autor;
+    protected String titulo;
+    protected String caminhoPDF;
 
-    public PDFEntry(String autor, String titulo) {
+    public PDFEntry(String autor, String titulo, String caminhoPDF) {
         this.autor = autor;
         this.titulo = titulo;
+        this.caminhoPDF = caminhoPDF;
     }
 
     public String getAutor() {
@@ -15,9 +17,9 @@ public abstract class PDFEntry {
         return titulo;
     }
 
-    public abstract String getTipo();
-
-    public String getDescricao() {
-        return "[" + getTipo() + "] " + titulo + " - " + autor;
+    public String getCaminhoPDF() {
+        return caminhoPDF;
     }
+
+    public abstract String getTipo();
 }

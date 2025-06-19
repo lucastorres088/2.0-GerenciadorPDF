@@ -26,20 +26,33 @@ public class Biblioteca {
         System.out.print("Caminho do PDF original: ");
         String origem = scanner.nextLine();
 
+        Path origemPath = Paths.get(origem);
+
+System.out.println("Caminho recebido: " + origem);
+System.out.println("Arquivo existe? " + Files.exists(origemPath));
+System.out.println("É diretório? " + Files.isDirectory(origemPath));
+System.out.println("Termina com .pdf? " + origem.toLowerCase().endsWith(".pdf"));
+
+        if (!Files.exists(origemPath) || Files.isDirectory(origemPath) || !origem.toLowerCase().endsWith(".pdf")) {
+        throw new ExcecaoBiblioteca("O caminho informado não é um arquivo PDF válido.");
+}
+
         PDFEntry entry;
-        switch (tipo) {
-            case "livro":
-                entry = new Livro(autor, titulo);
-                break;
-            case "nota":
-                entry = new NotaAula(autor, titulo);
-                break;
-            case "slide":
-                entry = new Slide(autor, titulo);
-                break;
-            default:
-                throw new ExcecaoBiblioteca("Tipo inválido.");
-        }
+
+        switch (tipo.toLowerCase()) {
+        case "livro":
+            entry = new Livro(autor, titulo, origem);
+            break;
+        case "nota":
+            entry = new NotaAula(autor, titulo, origem);
+            break;
+        case "slide":
+            entry = new Slide(autor, titulo, origem);
+            break;
+        default:
+            throw new ExcecaoBiblioteca("Tipo inválido.");
+}
+
 
         Path destino = Paths.get(pathBiblioteca, tipo, autor, titulo + ".pdf");
         try {
@@ -88,4 +101,17 @@ public class Biblioteca {
             return this.pathBiblioteca;
         }
     }
+
+    public PDFEntry buscarPorTitulo(String titulo) {
+    try {
+        List<PDFEntry> resultados = new ArrayList<>();
+        Files.walk(Paths.get(pathBiblioteca))
+            .filter(p -> p.toString().endsWith(".pdf") && p.getFileName().toString().startsWith(titulo))
+            .forEach(p -> resultados.add(new Livro("AutorDesconhecido", titulo, "caminho/desconhecido.pdf")));
+
+        return resultados.isEmpty() ? null : resultados.get(0);
+    } catch (IOException e) {
+        return null;
+    }
+}
 }
