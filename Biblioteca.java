@@ -28,11 +28,6 @@ public class Biblioteca {
 
         Path origemPath = Paths.get(origem);
 
-System.out.println("Caminho recebido: " + origem);
-System.out.println("Arquivo existe? " + Files.exists(origemPath));
-System.out.println("É diretório? " + Files.isDirectory(origemPath));
-System.out.println("Termina com .pdf? " + origem.toLowerCase().endsWith(".pdf"));
-
         if (!Files.exists(origemPath) || Files.isDirectory(origemPath) || !origem.toLowerCase().endsWith(".pdf")) {
         throw new ExcecaoBiblioteca("O caminho informado não é um arquivo PDF válido.");
 }
